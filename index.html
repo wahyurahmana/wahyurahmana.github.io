@@ -20,7 +20,7 @@
           $('#scanning').text("Scan started")
           $('#scan').text("Wait")
           $.get("http://103.175.220.229:3030/teams", function(data, status){
-            $('#scanning').text = data
+            $('#scanning').text(JSON.stringify(data))
           });
       
           // ndef.addEventListener("readingerror", () => {
