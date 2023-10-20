@@ -15,28 +15,23 @@
     $(document).ready(function(){
       $("#scan").click(async function(){
         try {
-          $.get("http://103.175.220.229:3030/teams", async function(data, status){
-            console.log(data)
-            $('#scanning').text(JSON.stringify(data))
+          const ndef = new NDEFReader();
+          await ndef.scan();
+          $('#scanning').text("Scan started")
+          $('#scan').text("Wait")
+      
+          ndef.addEventListener("readingerror", () => {
+            $('#scanning').text("Gagal Membaca NFC")
           });
-          // const ndef = new NDEFReader();
-          // await ndef.scan();
-          // $('#scanning').text("Scan started")
-          // $('#scan').text("Wait")
-      
-          // ndef.addEventListener("readingerror", () => {
-          //   console.log("Argh! Cannot read data from the NFC tag. Try another one?");
-          // });
-      
-          // ndef.addEventListener("reading", ({ message, serialNumber }) => {
-          //   $.get("http://103.175.220.229:3030/teams", function(data, status){
-          //     console.log(data);
-          //     $('#scanning').text = data
-          //   });
-          // });
+          ndef.addEventListener("reading", ({ message, serialNumber }) => {
+            $('#scanning').text(`Message ${message} - Serial Number ${serialNumber}`);
+            // $.get("http://103.175.220.229:3030/teams", function(data, status){
+            //   console.log(data);
+            //   $('#scanning').text = data
+            // });
+          });
         } catch (error) {
-          console.log(error);
-          $('#scanning').text = error
+          $('#scanning').text(error)
         }
       });
     });
